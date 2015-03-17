@@ -1,0 +1,8 @@
+# {{ ansible_managed }}
+<VirtualHost *>
+    ServerName {{ ansible_hostname }}
+    ServerAlias localhost
+
+    ProxyPass / http://localhost:5000/
+    ProxyPassReverse / http://localhost:5000/
+</VirtualHost>

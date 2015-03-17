@@ -1,0 +1,20 @@
+---
+- hosts: all
+  gather_facts: no
+
+  tasks:
+    - name: Group by EC2 tags
+      group_by: key={{ ec2_tag_env }}
+      changed_when: false
+
+- hosts: prod
+  gather_facts: no
+  tasks:
+    - name: Check for Shellshock vulnerability
+      command: env x='() { :;}; echo vulnerable' bash -c "echo ok"
+      register: result
+      changed_when: false
+
+    - name: Skip if not vulnerable
+      debug: msg="This host is vulnerable, patch bash"
+      when: '"vulnerable" in result.stdout'

@@ -1,0 +1,9 @@
+---
+- hosts: all
+  gather_facts: no
+  sudo: yes
+  tasks:
+    - name: Enable pipelining
+      lineinfile: dest=/etc/sudoers
+                  regexp="^Defaults\s+requiretty"
+                  state=absent

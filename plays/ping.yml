@@ -1,0 +1,20 @@
+---
+- hosts: all
+  gather_facts: no
+
+  tasks:
+    - name: Group by EC2 tags
+      group_by: key={{ ec2_tag_type }}servers
+      changed_when: false
+
+- hosts: webservers
+  gather_facts: no
+  tasks:
+    - name: Ping
+      ping:
+
+- hosts: dbservers
+  gather_facts: no
+  tasks:
+    - name: Ping
+      ping:

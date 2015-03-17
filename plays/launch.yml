@@ -1,0 +1,31 @@
+---
+- name: Provision EC2 instance
+  hosts: localhost
+  vars:
+      region:   eu-west-1
+      ami:      ami-6e7bd919 # Amazon Linux 2014.09.1
+      keypair:  mine
+      type:     t2.small
+      price:    0.02
+      tags:
+        env: prod
+        type: web
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Launch instance
+      local_action:
+        module: ec2
+        keypair: "{{ keypair }}"
+        instance_type: "{{ type | default('t1.micro') }}"
+        image: "{{ ami }}"
+        region: "{{ region }}"
+        count: "{{ count | default(1) }}"
+        spot_price: "{{ price }}"
+        wait: yes
+        instance_tags: "{{ tags }}"
+      register: ec2
+
+    - name: Brought up new instances
+      debug: msg="Spun up {{ count }} new {{ tags.env }} {{ tags.type }} instances"
+

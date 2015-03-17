@@ -1,0 +1,18 @@
+---
+- hosts: all
+  gather_facts: no
+
+  tasks:
+    - name: Group by EC2 tags
+      group_by: key={{ ec2_tag_type }}servers
+      changed_when: false
+
+- hosts: webservers
+  gather_facts: no
+  max_fail_percentage: 40
+  serial: 2
+  sudo: yes
+
+  tasks:
+    - name: Restart web servers
+      service: name=httpd state=restarted
